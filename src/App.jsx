@@ -17,6 +17,9 @@ function App() {
   const [selectedGenre, setSelectedGenre] = useState("");
   // AGGIUNGO UNO STATO PER FILTRARE IL GENERE
   const [filteredMovie, setFilteredMovie] = useState(movies);
+  //AGGIUNGO UNO STATO PER CERCARE IL TITOLO
+  const [searchTitle, setSearchTitle] = useState("");
+
   // USO USE EFFECT PER FILTRARE
   useEffect(() => {
     //SE NON SELEZIONO NESSUN GENERE, LA LISTA E' VUOTA
@@ -24,15 +27,39 @@ function App() {
       setFilteredMovie(movies);
       //SE INVECE VOGLIO SELEZIONARE UN GENERE, FILTRO E SALVO IN UNA NUOVA VARIABILE
     } else {
-      let result = movies.filter((movie) => movie.genre === selectedGenre);
+      let resultMovie = movies.filter((movie) => movie.genre === selectedGenre);
       //VEDO LA MODIFICA IN TEMPO REALE
-      setFilteredMovie(result);
-      console.log(result);
+      setFilteredMovie(resultMovie);
+      console.log(resultMovie);
     }
   }, [selectedGenre]); // CREO UNA DIPENDENZA PER VEDERE IL RISULTATO FILTRATO
+
+  // USO USE EFFECT PER CERCARE UN TITOLO
+  useEffect(() => {
+    // RESULT COMPRENDE L'ARRAY DEI FILM
+    let resultSearch = movies;
+    //SE STIAMO CERCANDO UN TITOLO
+    if (searchTitle) {
+      //ALLORA FILTRO PER I FILM E FACCIO IN MODO CHE CON INCLUDES COMPRENDANO IL TITOLO (lowercase per cercare in minuscolo)
+      resultSearch = resultSearch.filter((movie) =>
+        movie.title.toLowerCase().includes(searchTitle.toLowerCase())
+      );
+    }
+    //VEDO LE MODIFICHE IN TEMPO REALE
+    setFilteredMovie(resultSearch);
+    console.log(resultSearch);
+  }, [searchTitle]); //CREO DIPENDENZA PER VEDERE IL TITOLO CERCATO
+
   return (
     <div>
       <h1>Film</h1>
+      <label>Cerca un titolo di un film:</label>
+      <input
+        type="text"
+        value={searchTitle}
+        onChange={(element) => setSearchTitle(element.target.value)}
+        placeholder="Cerca un film :)"
+      />
       <label>Scegli il tuo genere:</label>
       {/*CONTROLLO LO STATO PER MOSTRARE IL VALORE CORRENTE*/}
       <select
