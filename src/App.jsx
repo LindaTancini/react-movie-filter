@@ -12,6 +12,25 @@ const movies = [
 ];
 console.log(movies);
 
-function App() {}
+function App() {
+  // AGGIUNGO UNO STATO PER FILTRARE IL GENERE DEL FILM
+  const [selectedGenre, setSelectedGenre] = useState("");
+  return (
+    <div>
+      <h1>Film</h1>
+      <label>Scegli il tuo genere:</label>
+      <select>
+        <option value="">---</option>
+        <option>Fantascienza</option>
+        <option>Thriller</option>
+        <option>Romantico</option>
+        <option>Azione</option>
+      </select>
+      <section>
+        <h2>Elenco dei Film</h2>
+      </section>
+    </div>
+  );
+}
 
 export default App;
