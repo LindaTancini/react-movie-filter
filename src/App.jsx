@@ -21,13 +21,20 @@ function App() {
       <label>Scegli il tuo genere:</label>
       <select>
         <option value="">---</option>
-        <option>Fantascienza</option>
-        <option>Thriller</option>
-        <option>Romantico</option>
-        <option>Azione</option>
+        <option value="Fantascienza">Fantascienza</option>
+        <option value="Thriller">Thriller</option>
+        <option value="Romantico">Romantico</option>
+        <option value="Azione">Azione</option>
       </select>
       <section>
         <h2>Elenco dei Film</h2>
+        {/*AGGIUNGO MAP PER ITINERARE NELL'ARAY E TROVARE TITOLO E GENERE*/}
+        {movies.map((movie, index) => (
+          <article key={index}>
+            <h3>{movie.title}</h3>
+            <p>Genere: {movie.genre}</p>
+          </article>
+        ))}
       </section>
     </div>
   );
