@@ -19,6 +19,9 @@ function App() {
   const [filteredMovie, setFilteredMovie] = useState(movies);
   //AGGIUNGO UNO STATO PER CERCARE IL TITOLO
   const [searchTitle, setSearchTitle] = useState("");
+  //AGGIUNGO DUE STATI, UNO PER AGGIUNGERE UN TITOLO E UNO PER AGGIUNGERE UN GENERE
+  const [newTitle, setNewTitle] = useState("");
+  const [newGenre, setNewGenre] = useState("");
 
   // USO USE EFFECT PER FILTRARE
   useEffect(() => {
@@ -49,6 +52,21 @@ function App() {
     setFilteredMovie(resultSearch);
     console.log(resultSearch);
   }, [searchTitle]); //CREO DIPENDENZA PER VEDERE IL TITOLO CERCATO
+
+  // CREO UNA FUNZIONE PER AGGIUNGERE NUOVI FILM E CON PREVENT DEFAULT NON FACCIO RICARICARE LA PAGINA
+  const addNewMovies = (event) => {
+    event.preventDefault();
+    // SE IL NUOVO TITOLO E IL NUOVO GENERE NON SONO VUOTI
+    if (newTitle && newGenre) {
+      //CREO VARIABILE PER CREARE NUOVI FILM
+      const newMovie = { title: newTitle, genre: newGenre };
+      //CON IL METODO SPREAD AGGIORNO LA LISTA
+      setFilteredMovie([...movies, newMovie]);
+      //PULISCO I CAMPI DEL TITOLO E DEL GENERE UNA VOLTA FINITO DI SCRIVERE
+      setNewTitle("");
+      setNewGenre("");
+    }
+  };
 
   return (
     <div>
@@ -81,6 +99,34 @@ function App() {
             <p>Genere: {movie.genre}</p>
           </article>
         ))}
+      </section>
+      <section>
+        <h2>Aggiungi un Nuovo Film</h2>
+        <form onSubmit={addNewMovies}>
+          <div>
+            <label>Titolo:</label>
+            <input
+              type="text"
+              value={newTitle}
+              onChange={(element) => setNewTitle(element.target.value)}
+              placeholder="Aggiungi un film :)"
+            />
+          </div>
+          <div>
+            <label>Genere:</label>
+            <select
+              value={newGenre}
+              onChange={(element) => setNewGenre(element.target.value)}
+            >
+              <option value="">---</option>
+              <option value="Fantascienza">Fantascienza</option>
+              <option value="Thriller">Thriller</option>
+              <option value="Romantico">Romantico</option>
+              <option value="Azione">Azione</option>
+            </select>
+          </div>
+          <button type="submit">Aggiungi Film</button>
+        </form>
       </section>
     </div>
   );
