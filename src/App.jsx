@@ -10,7 +10,6 @@ const movies = [
   { title: "Interstellar", genre: "Fantascienza" },
   { title: "Pulp Fiction", genre: "Thriller" },
 ];
-console.log(movies);
 
 function App() {
   // AGGIUNGO UNO STATO PER SELEZIONARE IL GENERE DEL FILM
@@ -22,25 +21,29 @@ function App() {
   //AGGIUNGO DUE STATI, UNO PER AGGIUNGERE UN TITOLO E UNO PER AGGIUNGERE UN GENERE
   const [newTitle, setNewTitle] = useState("");
   const [newGenre, setNewGenre] = useState("");
+  // AGGIUNGO STATO CON L'ARRAY INIZIALE PER AGGIUNGERE I NUOVI FILM
+  const [newMovieAdd, setNewMovieAdd] = useState(movies);
 
   // USO USE EFFECT PER FILTRARE
   useEffect(() => {
     //SE NON SELEZIONO NESSUN GENERE, LA LISTA E' VUOTA
     if (selectedGenre === "") {
-      setFilteredMovie(movies);
+      setFilteredMovie(newMovieAdd);
       //SE INVECE VOGLIO SELEZIONARE UN GENERE, FILTRO E SALVO IN UNA NUOVA VARIABILE
     } else {
-      let resultMovie = movies.filter((movie) => movie.genre === selectedGenre);
+      let resultMovie = newMovieAdd.filter(
+        (movie) => movie.genre === selectedGenre
+      );
       //VEDO LA MODIFICA IN TEMPO REALE
       setFilteredMovie(resultMovie);
       console.log(resultMovie);
     }
-  }, [selectedGenre]); // CREO UNA DIPENDENZA PER VEDERE IL RISULTATO FILTRATO
+  }, [selectedGenre, newMovieAdd]); // CREO UNA DIPENDENZA PER VEDERE IL RISULTATO FILTRATO
 
   // USO USE EFFECT PER CERCARE UN TITOLO
   useEffect(() => {
     // RESULT COMPRENDE L'ARRAY DEI FILM
-    let resultSearch = movies;
+    let resultSearch = newMovieAdd;
     //SE STIAMO CERCANDO UN TITOLO
     if (searchTitle) {
       //ALLORA FILTRO PER I FILM E FACCIO IN MODO CHE CON INCLUDES COMPRENDANO IL TITOLO (lowercase per cercare in minuscolo)
@@ -51,21 +54,18 @@ function App() {
     //VEDO LE MODIFICHE IN TEMPO REALE
     setFilteredMovie(resultSearch);
     console.log(resultSearch);
-  }, [searchTitle]); //CREO DIPENDENZA PER VEDERE IL TITOLO CERCATO
+  }, [searchTitle, newMovieAdd]); //CREO DIPENDENZA PER VEDERE IL TITOLO CERCATO
 
   // CREO UNA FUNZIONE PER AGGIUNGERE NUOVI FILM E CON PREVENT DEFAULT NON FACCIO RICARICARE LA PAGINA
   const addNewMovies = (event) => {
     event.preventDefault();
-    // SE IL NUOVO TITOLO E IL NUOVO GENERE NON SONO VUOTI
-    if (newTitle && newGenre) {
-      //CREO VARIABILE PER CREARE NUOVI FILM
-      const newMovie = { title: newTitle, genre: newGenre };
-      //CON IL METODO SPREAD AGGIORNO LA LISTA
-      setFilteredMovie([...movies, newMovie]);
-      //PULISCO I CAMPI DEL TITOLO E DEL GENERE UNA VOLTA FINITO DI SCRIVERE
-      setNewTitle("");
-      setNewGenre("");
-    }
+    //CREO VARIABILE PER CREARE NUOVI FILM
+    const newMovie = { title: newTitle, genre: newGenre };
+    //CON IL METODO SPREAD AGGIORNO LA LISTA
+    setNewMovieAdd([...newMovieAdd, newMovie]);
+    //PULISCO I CAMPI DEL TITOLO E DEL GENERE UNA VOLTA FINITO DI SCRIVERE
+    setNewTitle("");
+    setNewGenre("");
   };
 
   return (
