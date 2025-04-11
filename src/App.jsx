@@ -24,37 +24,24 @@ function App() {
   // AGGIUNGO STATO CON L'ARRAY INIZIALE PER AGGIUNGERE I NUOVI FILM
   const [newMovieAdd, setNewMovieAdd] = useState(movies);
 
-  // USO USE EFFECT PER FILTRARE
+  // USO USE EFFECT PER FILTRARE IN BASE AL GENERE E/O AL TITOLO
   useEffect(() => {
-    //SE NON SELEZIONO NESSUN GENERE, LA LISTA E' VUOTA
-    if (selectedGenre === "") {
-      setFilteredMovie(newMovieAdd);
-      //SE INVECE VOGLIO SELEZIONARE UN GENERE, FILTRO E SALVO IN UNA NUOVA VARIABILE
-    } else {
-      let resultMovie = newMovieAdd.filter(
+    let resultMovie = newMovieAdd;
+    // SE SELEZIONO UN GENERE, ALLORA FILTRIAMO PER GENERE
+    if (selectedGenre !== "") {
+      resultMovie = resultMovie.filter(
         (movie) => movie.genre === selectedGenre
       );
-      //VEDO LA MODIFICA IN TEMPO REALE
-      setFilteredMovie(resultMovie);
-      console.log(resultMovie);
     }
-  }, [selectedGenre, newMovieAdd]); // CREO UNA DIPENDENZA PER VEDERE IL RISULTATO FILTRATO
-
-  // USO USE EFFECT PER CERCARE UN TITOLO
-  useEffect(() => {
-    // RESULT COMPRENDE L'ARRAY DEI FILM
-    let resultSearch = newMovieAdd;
-    //SE STIAMO CERCANDO UN TITOLO
+    // SE INVECE STO CERCANDO UN TITOLO, ALLORA FILTRIAMO PER TITOLO E FACCIO IN MODO CHE CON INCLUDES COMPRENDANO LE LETTERE PRESENTI NEL TITOLO (lowercase per cercare in minuscolo)
     if (searchTitle) {
-      //ALLORA FILTRO PER I FILM E FACCIO IN MODO CHE CON INCLUDES COMPRENDANO IL TITOLO (lowercase per cercare in minuscolo)
-      resultSearch = resultSearch.filter((movie) =>
+      resultMovie = resultMovie.filter((movie) =>
         movie.title.toLowerCase().includes(searchTitle.toLowerCase())
       );
     }
-    //VEDO LE MODIFICHE IN TEMPO REALE
-    setFilteredMovie(resultSearch);
-    console.log(resultSearch);
-  }, [searchTitle, newMovieAdd]); //CREO DIPENDENZA PER VEDERE IL TITOLO CERCATO
+    // AGGIORNO LO STATO CON TUTTO FILTRATO
+    setFilteredMovie(resultMovie);
+  }, [selectedGenre, searchTitle, newMovieAdd]); // CREO UNA DIPENDENZA PER VEDERE IL RISULTATO FILTRATO
 
   // CREO UNA FUNZIONE PER AGGIUNGERE NUOVI FILM E CON PREVENT DEFAULT NON FACCIO RICARICARE LA PAGINA
   const addNewMovies = (event) => {
@@ -92,7 +79,7 @@ function App() {
       </select>
       <section>
         <h2>Elenco dei Film</h2>
-        {/*AGGIUNGO MAP PER ITINERARE NELL'ARAY E TROVARE TITOLO E GENERE*/}
+        {/*AGGIUNGO MAP PER ITINERARE NELL'ARRAY FILTRATO E TROVARE TITOLO E GENERE*/}
         {filteredMovie.map((movie, index) => (
           <article key={index}>
             <h3>{movie.title}</h3>
@@ -105,6 +92,7 @@ function App() {
         <form onSubmit={addNewMovies}>
           <div>
             <label>Titolo:</label>
+            {/*CONTROLLO LO STATO PER MOSTRARE IL VALORE CORRENTE*/}
             <input
               type="text"
               value={newTitle}
@@ -114,6 +102,7 @@ function App() {
           </div>
           <div>
             <label>Genere:</label>
+            {/*CONTROLLO LO STATO PER MOSTRARE IL VALORE CORRENTE*/}
             <select
               value={newGenre}
               onChange={(element) => setNewGenre(element.target.value)}
