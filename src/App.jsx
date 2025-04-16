@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 
-// METTO QUI L'ARRAY DI OGGETTI
-
 const movies = [
   { title: "Inception", genre: "Fantascienza" },
   { title: "Il Padrino", genre: "Thriller" },
@@ -33,7 +31,7 @@ function App() {
         (movie) => movie.genre === selectedGenre
       );
     }
-    // SE INVECE STO CERCANDO UN TITOLO, ALLORA FILTRIAMO PER TITOLO E FACCIO IN MODO CHE CON INCLUDES COMPRENDANO LE LETTERE PRESENTI NEL TITOLO (lowercase per cercare in minuscolo)
+    // SE INVECE STO CERCANDO UN TITOLO, ALLORA FILTRIAMO PER TITOLO
     if (searchTitle) {
       resultMovie = resultMovie.filter((movie) =>
         movie.title.toLowerCase().includes(searchTitle.toLowerCase())
@@ -43,14 +41,12 @@ function App() {
     setFilteredMovie(resultMovie);
   }, [selectedGenre, searchTitle, newMovieAdd]); // CREO UNA DIPENDENZA PER VEDERE IL RISULTATO FILTRATO
 
-  // CREO UNA FUNZIONE PER AGGIUNGERE NUOVI FILM E CON PREVENT DEFAULT NON FACCIO RICARICARE LA PAGINA
   const addNewMovies = (event) => {
     event.preventDefault();
     //CREO VARIABILE PER CREARE NUOVI FILM
     const newMovie = { title: newTitle, genre: newGenre };
     //CON IL METODO SPREAD AGGIORNO LA LISTA
     setNewMovieAdd([...newMovieAdd, newMovie]);
-    //PULISCO I CAMPI DEL TITOLO E DEL GENERE UNA VOLTA FINITO DI SCRIVERE
     setNewTitle("");
     setNewGenre("");
   };
@@ -66,7 +62,6 @@ function App() {
         placeholder="Cerca un film :)"
       />
       <label>Scegli il tuo genere:</label>
-      {/*CONTROLLO LO STATO PER MOSTRARE IL VALORE CORRENTE*/}
       <select
         value={selectedGenre}
         onChange={(element) => setSelectedGenre(element.target.value)}
@@ -79,7 +74,6 @@ function App() {
       </select>
       <section>
         <h2>Elenco dei Film</h2>
-        {/*AGGIUNGO MAP PER ITINERARE NELL'ARRAY FILTRATO E TROVARE TITOLO E GENERE*/}
         {filteredMovie.map((movie, index) => (
           <article key={index}>
             <h3>{movie.title}</h3>
@@ -92,7 +86,6 @@ function App() {
         <form onSubmit={addNewMovies}>
           <div>
             <label>Titolo:</label>
-            {/*CONTROLLO LO STATO PER MOSTRARE IL VALORE CORRENTE*/}
             <input
               type="text"
               value={newTitle}
@@ -102,7 +95,6 @@ function App() {
           </div>
           <div>
             <label>Genere:</label>
-            {/*CONTROLLO LO STATO PER MOSTRARE IL VALORE CORRENTE*/}
             <select
               value={newGenre}
               onChange={(element) => setNewGenre(element.target.value)}
